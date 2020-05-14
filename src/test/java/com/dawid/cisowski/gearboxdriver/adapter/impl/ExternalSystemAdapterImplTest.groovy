@@ -4,6 +4,12 @@ import com.dawid.cisowski.gearboxdriver.adapter.ExternalSystemAdapter
 import external.api.ExternalSystems
 import spock.lang.Specification
 
+/*
+ * GearboxDriver
+ * Created by Dawid Cisowski
+ * on 14.05.20.
+ */
+
 class ExternalSystemAdapterImplTest extends Specification {
     ExternalSystems externalSystems = Mock(ExternalSystems)
     ExternalSystemAdapter externalSystemAdapter = new ExternalSystemAdapterImpl()

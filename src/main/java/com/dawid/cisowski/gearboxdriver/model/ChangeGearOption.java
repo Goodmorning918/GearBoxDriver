@@ -10,5 +10,5 @@ package com.dawid.cisowski.gearboxdriver.model;
  * Enum to define witch operation in gearbox we could use
  */
 public enum ChangeGearOption {
-  REDUCE, INCREASE, WITHOUT_CHANGE,
+  REDUCE, DOUBLE_REDUCE, INCREASE, WITHOUT_CHANGE,
 }

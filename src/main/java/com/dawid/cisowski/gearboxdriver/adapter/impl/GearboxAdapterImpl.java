@@ -1,7 +1,7 @@
 package com.dawid.cisowski.gearboxdriver.adapter.impl;
 
-import com.dawid.cisowski.gearboxdriver.exception.GearboxDriverException;
 import com.dawid.cisowski.gearboxdriver.adapter.GearboxAdapter;
+import com.dawid.cisowski.gearboxdriver.exception.GearboxDriverException;
 import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption;
 import external.api.Gearbox;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +41,15 @@ public class GearboxAdapterImpl implements GearboxAdapter {
   @Override
   public void updateGearboxState(Gearbox gearbox, ChangeGearOption changeGearOption) {
     switch (changeGearOption) {
+      case DOUBLE_REDUCE: {
+        Integer currentGear = this.getCurrentGear(gearbox);
+
+        if (currentGear > 2) {
+          log.info("Reduce gear to:{}", currentGear - 2);
+          gearbox.setCurrentGear(currentGear - 2);
+        }
+        break;
+      }
       case REDUCE: {
         Integer currentGear = this.getCurrentGear(gearbox);
 

@@ -5,6 +5,7 @@ import com.dawid.cisowski.gearboxdriver.adapter.GearboxAdapter;
 import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption;
 import com.dawid.cisowski.gearboxdriver.model.DriveMode;
 import com.dawid.cisowski.gearboxdriver.model.Rpm;
+import com.dawid.cisowski.gearboxdriver.model.Threshold;
 import com.dawid.cisowski.gearboxdriver.service.CalculateGearService;
 import com.dawid.cisowski.gearboxdriver.service.GearboxDriverService;
 import external.api.ExternalSystems;
@@ -30,13 +31,19 @@ public class GearboxDriverServiceImpl implements GearboxDriverService {
    * {@inheritDoc}
    */
   @Override
-  public void handleGas(DriveMode driveMode) {
+  public void handleGas(DriveMode driveMode, Threshold threshold) {
     if (gearboxAdapter.isGearboxInDriveState(gearbox)) {
       log.info("Gearbox in Drive State, calculate change gear");
-      Rpm currentRpm = new Rpm(externalSystemAdapter.getCurrentEngineRpm(externalSystems));
+      ChangeGearOption changeGearOption = calculateGearService.calculateChangeGearForKickDown(threshold, driveMode);
 
-      ChangeGearOption changeGearOption = calculateGearService.calculateChangeGear(currentRpm, driveMode);
+      if (changeGearOption == ChangeGearOption.WITHOUT_CHANGE) {
+        log.info("KickDown not detected. Normal calculateChangeGear run");
 
+        Rpm currentRpm = new Rpm(externalSystemAdapter.getCurrentEngineRpm(externalSystems));
+        changeGearOption = calculateGearService.calculateChangeGear(currentRpm, driveMode);
+      }
+
+      log.info("Try update Gearbox State with value: {}", changeGearOption.name());
       gearboxAdapter.updateGearboxState(gearbox, changeGearOption);
     }
   }

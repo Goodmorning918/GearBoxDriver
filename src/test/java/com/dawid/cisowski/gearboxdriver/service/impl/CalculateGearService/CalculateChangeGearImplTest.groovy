@@ -1,15 +1,22 @@
-package com.dawid.cisowski.gearboxdriver.service.impl
+package com.dawid.cisowski.gearboxdriver.service.impl.CalculateGearService
 
 import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption
 import com.dawid.cisowski.gearboxdriver.model.Rpm
+import com.dawid.cisowski.gearboxdriver.service.impl.CalculateGearServiceCalculateChangeGearImpl
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static com.dawid.cisowski.gearboxdriver.model.ChangeGearOption.*
 import static com.dawid.cisowski.gearboxdriver.model.DriveMode.*
 
-class CalculateGearServiceImplTest extends Specification {
-    CalculateGearServiceImpl gearboxDriverService = new CalculateGearServiceImpl()
+/*
+ * GearboxDriver
+ * Created by Dawid Cisowski
+ * on 14.05.20.
+ */
+
+class CalculateChangeGearImplTest extends Specification {
+    CalculateGearServiceCalculateChangeGearImpl gearboxDriverService = new CalculateGearServiceCalculateChangeGearImpl()
 
     @Unroll
     def "Success reduce gear for Rpm: #rpmValue drive mode: #driveMode"() {

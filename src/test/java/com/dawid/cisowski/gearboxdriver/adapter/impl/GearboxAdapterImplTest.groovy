@@ -8,6 +8,12 @@ import spock.lang.Specification
 
 import static com.dawid.cisowski.gearboxdriver.model.ChangeGearOption.*
 
+/*
+ * GearboxDriver
+ * Created by Dawid Cisowski
+ * on 14.05.20.
+ */
+
 class GearboxAdapterImplTest extends Specification {
     Gearbox gearbox = Mock(Gearbox)
     GearboxAdapter gearboxAdapter = new GearboxAdapterImpl()

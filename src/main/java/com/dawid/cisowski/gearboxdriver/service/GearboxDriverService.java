@@ -8,6 +8,7 @@ package com.dawid.cisowski.gearboxdriver.service;
  */
 
 import com.dawid.cisowski.gearboxdriver.model.DriveMode;
+import com.dawid.cisowski.gearboxdriver.model.Threshold;
 
 /**
  * Service to managing gearbox
@@ -19,6 +20,6 @@ public interface GearboxDriverService {
    * @param driveMode current engine Drive Mode
    * @return operation which gearbox should do
    */
-  void handleGas(DriveMode driveMode);
+  void handleGas(DriveMode driveMode, Threshold threshold);
 
 }
