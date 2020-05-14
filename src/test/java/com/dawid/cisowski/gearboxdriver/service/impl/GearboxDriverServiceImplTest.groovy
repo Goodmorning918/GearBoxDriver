@@ -1,67 +1,57 @@
 package com.dawid.cisowski.gearboxdriver.service.impl
 
+import com.dawid.cisowski.gearboxdriver.adapter.ExternalSystemAdapter
+import com.dawid.cisowski.gearboxdriver.adapter.GearboxAdapter
 import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption
 import com.dawid.cisowski.gearboxdriver.model.Rpm
+import com.dawid.cisowski.gearboxdriver.service.CalculateGearService
+import com.dawid.cisowski.gearboxdriver.service.GearboxDriverService
+import external.api.ExternalSystems
+import external.api.Gearbox
 import spock.lang.Specification
-import spock.lang.Unroll
 
-import static com.dawid.cisowski.gearboxdriver.model.ChangeGearOption.*
-import static com.dawid.cisowski.gearboxdriver.model.DriveMode.*
+import static com.dawid.cisowski.gearboxdriver.model.ChangeGearOption.REDUCE
+import static com.dawid.cisowski.gearboxdriver.model.DriveMode.SPORT
 
 class GearboxDriverServiceImplTest extends Specification {
-    GearboxDriverServiceImpl gearboxDriverService = new GearboxDriverServiceImpl()
+    GearboxAdapter gearboxAdapter = Mock(GearboxAdapter)
+    ExternalSystemAdapter externalSystemAdapter = Mock(ExternalSystemAdapter)
+    ExternalSystems externalSystems = Mock(ExternalSystems)
+    Gearbox gearbox = Mock(Gearbox)
+    CalculateGearService calculateGearService = Mock(CalculateGearService)
 
-    @Unroll
-    def "Success reduce gear for Rpm: #rpmValue drive mode: #driveMode"() {
+    GearboxDriverService gearboxDriverService = GearboxDriverServiceImpl.builder()
+            .gearboxAdapter(gearboxAdapter)
+            .externalSystemAdapter(externalSystemAdapter)
+            .gearbox(gearbox)
+            .externalSystems(externalSystems)
+            .calculateGearService(calculateGearService)
+            .build()
+
+    def "success HandleGas method"() {
         given:
-        Rpm rpm = new Rpm(rpmValue)
+        Double currentRpm = 2000
+        ChangeGearOption changeGearOption = REDUCE
 
         when:
-        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode)
+        gearboxDriverService.handleGas(SPORT)
 
         then:
-        calculatedChangeGearOption == changeGearOption
-
-        where:
-        rpmValue | driveMode || changeGearOption
-        999      | ECO       || REDUCE
-        999      | COMFORT   || REDUCE
-        1499     | SPORT     || REDUCE
+        1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> true
+        1 * externalSystemAdapter.getCurrentEngineRpm(externalSystems) >> currentRpm
+        1 * calculateGearService.calculateChangeGear(_ as Rpm, changeGearOption) >> changeGearOption
+        1 * gearboxAdapter.updateGearboxState(gearbox, changeGearOption)
     }
 
-    @Unroll
-    def "Success increase gear for Rpm: #rpmValue drive mode: #driveMode"() {
+    def "success skip nested method when gearbox state is park"() {
         given:
-        Rpm rpm = new Rpm(rpmValue)
+        ChangeGearOption changeGearOption = REDUCE
 
         when:
-        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode)
+        gearboxDriverService.handleGas(SPORT)
 
         then:
-        calculatedChangeGearOption == changeGearOption
-
-        where:
-        rpmValue | driveMode || changeGearOption
-        2001     | ECO       || INCREASE
-        2501     | COMFORT   || INCREASE
-        5001     | SPORT     || INCREASE
-    }
-
-    @Unroll
-    def "Success not change gear for Rpm: #rpmValue drive mode: #driveMode"() {
-        given:
-        Rpm rpm = new Rpm(rpmValue)
-
-        when:
-        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode)
-
-        then:
-        calculatedChangeGearOption == changeGearOption
-
-        where:
-        rpmValue | driveMode || changeGearOption
-        1700     | ECO       || WITHOUT_CHANGE
-        1700     | COMFORT   || WITHOUT_CHANGE
-        3000     | SPORT     || WITHOUT_CHANGE
+        1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> false
+        0 * gearboxAdapter.updateGearboxState(gearbox, changeGearOption)
     }
 }

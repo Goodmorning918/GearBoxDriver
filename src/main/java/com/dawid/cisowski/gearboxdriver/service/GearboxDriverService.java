@@ -7,22 +7,18 @@ package com.dawid.cisowski.gearboxdriver.service;
  * on 13.05.20.
  */
 
-import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption;
 import com.dawid.cisowski.gearboxdriver.model.DriveMode;
-import com.dawid.cisowski.gearboxdriver.model.Rpm;
 
 /**
  * Service to managing gearbox
  */
 public interface GearboxDriverService {
-
-
   /**
    * Calculate operation which gearbox should do for given parameters
    *
-   * @param currentRpm current engine RPM
-   * @param driveMode  current engine Drive Mode
+   * @param driveMode current engine Drive Mode
    * @return operation which gearbox should do
    */
-  ChangeGearOption calculateChangeGear(Rpm currentRpm, DriveMode driveMode);
+  void handleGas(DriveMode driveMode);
+
 }

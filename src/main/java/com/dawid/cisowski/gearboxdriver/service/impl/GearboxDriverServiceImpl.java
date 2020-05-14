@@ -1,37 +1,43 @@
 package com.dawid.cisowski.gearboxdriver.service.impl;
 
+import com.dawid.cisowski.gearboxdriver.adapter.ExternalSystemAdapter;
+import com.dawid.cisowski.gearboxdriver.adapter.GearboxAdapter;
 import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption;
 import com.dawid.cisowski.gearboxdriver.model.DriveMode;
 import com.dawid.cisowski.gearboxdriver.model.Rpm;
+import com.dawid.cisowski.gearboxdriver.service.CalculateGearService;
 import com.dawid.cisowski.gearboxdriver.service.GearboxDriverService;
+import external.api.ExternalSystems;
+import external.api.Gearbox;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.dawid.cisowski.gearboxdriver.model.ChangeGearOption.*;
-
-/*
- * GearboxDriver
- * Created by Dawid Cisowski
- * on 13.05.20.
+/**
+ * {@inheritDoc}
  */
 @Slf4j
+@Builder
+@AllArgsConstructor
 public class GearboxDriverServiceImpl implements GearboxDriverService {
+  private final GearboxAdapter gearboxAdapter;
+  private final Gearbox gearbox;
+  private final ExternalSystems externalSystems;
+  private final CalculateGearService calculateGearService;
+  private final ExternalSystemAdapter externalSystemAdapter;
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public ChangeGearOption calculateChangeGear(Rpm currentRpm, DriveMode driveMode) {
-    log.info("Calculate change gear operation for rpm: {}, and driveMode: {}", currentRpm.getValue(), driveMode.name());
+  public void handleGas(DriveMode driveMode) {
+    if (gearboxAdapter.isGearboxInDriveState(gearbox)) {
+      log.info("Gearbox in Drive State, calculate change gear");
+      Rpm currentRpm = new Rpm(externalSystemAdapter.getCurrentEngineRpm(externalSystems));
 
-    if (currentRpm.grater(driveMode.getIncreaseGearRPM())) {
-      log.info("Gearbox should increase gear");
-      return INCREASE;
-    } else if (currentRpm.smaller(driveMode.getReduceGearRPM())) {
-      log.info("Gearbox should reduce gear");
-      return REDUCE;
-    } else {
-      log.info("Current gear is correct");
-      return WITHOUT_CHANGE;
+      ChangeGearOption changeGearOption = calculateGearService.calculateChangeGear(currentRpm, driveMode);
+
+      gearboxAdapter.updateGearboxState(gearbox, changeGearOption);
     }
   }
 }

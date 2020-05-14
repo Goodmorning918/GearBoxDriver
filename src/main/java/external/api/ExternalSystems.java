@@ -1,13 +1,13 @@
 package external.api;
 
-class ExternalSystems {
+public class ExternalSystems {
 
 
   private double currentRpm;
   private double angularSpeed = 150;
   private Lights lights = new Lights();
 
-  ExternalSystems() {
+  public ExternalSystems() {
 
   }
 

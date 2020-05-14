@@ -16,9 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Rpm {
   @Getter
-  private final Long value;
+  private final Double value;
 
-  public Rpm(Long value) {
+  public Rpm(Double value) {
     this.value = value;
   }
 
