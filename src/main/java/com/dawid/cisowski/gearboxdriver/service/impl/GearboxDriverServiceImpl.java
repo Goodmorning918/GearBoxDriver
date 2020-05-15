@@ -31,9 +31,9 @@ public class GearboxDriverServiceImpl implements GearboxDriverService {
    * {@inheritDoc}
    */
   @Override
-  public void handleGas(DriveMode driveMode, Threshold threshold) {
+  public void handleGasAutoMode(DriveMode driveMode, Threshold threshold) {
     if (gearboxAdapter.isGearboxInDriveState(gearbox)) {
-      log.info("Gearbox in Drive State, calculate change gear");
+      log.info("Gearbox in Drive State, calculate change gear for Kick Dome Mode");
       ChangeGearOption changeGearOption = calculateGearService.calculateChangeGearForKickDown(threshold, driveMode);
 
       if (changeGearOption == ChangeGearOption.WITHOUT_CHANGE) {
@@ -42,6 +42,19 @@ public class GearboxDriverServiceImpl implements GearboxDriverService {
         Rpm currentRpm = new Rpm(externalSystemAdapter.getCurrentEngineRpm(externalSystems));
         changeGearOption = calculateGearService.calculateChangeGear(currentRpm, driveMode);
       }
+
+      log.info("Try update Gearbox State with value: {}", changeGearOption.name());
+      gearboxAdapter.updateGearboxState(gearbox, changeGearOption);
+    }
+  }
+
+  @Override
+  public void handleGasManualMode(DriveMode driveMode) {
+    if (gearboxAdapter.isGearboxInDriveState(gearbox)) {
+      log.info("Gearbox in Drive State, calculate engine braking by reduce gear");
+
+      Rpm currentRpm = new Rpm(externalSystemAdapter.getCurrentEngineRpm(externalSystems));
+      ChangeGearOption changeGearOption = calculateGearService.checkIfBrakeByReduceGear(currentRpm, driveMode);
 
       log.info("Try update Gearbox State with value: {}", changeGearOption.name());
       gearboxAdapter.updateGearboxState(gearbox, changeGearOption);

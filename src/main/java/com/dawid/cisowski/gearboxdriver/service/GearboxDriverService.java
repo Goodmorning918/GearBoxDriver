@@ -15,11 +15,18 @@ import com.dawid.cisowski.gearboxdriver.model.Threshold;
  */
 public interface GearboxDriverService {
   /**
-   * Calculate operation which gearbox should do for given parameters
+   * Calculate operation which gearbox should do for given parameters in automate mode
    *
    * @param driveMode current engine Drive Mode
    * @return operation which gearbox should do
    */
-  void handleGas(DriveMode driveMode, Threshold threshold);
+  void handleGasAutoMode(DriveMode driveMode, Threshold threshold);
 
+  /**
+   * Calculate operation which gearbox should do for given parameters in manual mode
+   *
+   * @param driveMode current engine Drive Mode
+   * @return operation which gearbox should do
+   */
+  void handleGasManualMode(DriveMode driveMode);
 }

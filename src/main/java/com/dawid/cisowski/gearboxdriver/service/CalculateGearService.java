@@ -34,4 +34,13 @@ public interface CalculateGearService {
    * @return operation which gearbox should do
    */
   ChangeGearOption calculateChangeGearForKickDown(Threshold threshold, DriveMode driveMode);
+
+  /**
+   * Check if gearbox should reduce gear to brake car
+   *
+   * @param currentRpm current engine RPM
+   * @param driveMode  current engine Drive Mode
+   * @return operation which gearbox should do
+   */
+  ChangeGearOption checkIfBrakeByReduceGear(Rpm currentRpm, DriveMode driveMode);
 }

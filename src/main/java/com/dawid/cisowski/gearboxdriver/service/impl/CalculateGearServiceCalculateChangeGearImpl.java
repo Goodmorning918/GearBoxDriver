@@ -73,4 +73,17 @@ public class CalculateGearServiceCalculateChangeGearImpl implements CalculateGea
     log.info("Calculated operation by kick down: {}", changeGearOption.name());
     return changeGearOption;
   }
+
+  @Override
+  public ChangeGearOption checkIfBrakeByReduceGear(Rpm currentRpm, DriveMode driveMode) {
+    log.info("Calculate automate braking for rpm: {}, and driveMode: {}", currentRpm.getValue(), driveMode.name());
+
+    if (currentRpm.grater(driveMode.getReduceGearForBreakingRPM())) {
+      log.info("Gearbox should reduce gear for braking");
+      return REDUCE;
+    } else {
+      log.info("Current gear is correct");
+      return WITHOUT_CHANGE;
+    }
+  }
 }

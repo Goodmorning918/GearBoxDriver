@@ -37,14 +37,14 @@ class GearboxDriverServiceImplTest extends Specification {
             .calculateGearService(calculateGearService)
             .build()
 
-    def "success HandleGas method by calculateChangeGear"() {
+    def "success handleGasAutoMode method by calculateChangeGear"() {
         given:
         Double currentRpm = 2000
         Threshold threshold = new Threshold(0.5)
         ChangeGearOption changeGearOption = REDUCE
 
         when:
-        gearboxDriverService.handleGas(SPORT, threshold)
+        gearboxDriverService.handleGasAutoMode(SPORT, threshold)
 
         then:
         1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> true
@@ -53,27 +53,40 @@ class GearboxDriverServiceImplTest extends Specification {
         1 * calculateGearService.calculateChangeGear(_ as Rpm, SPORT) >> changeGearOption
         1 * gearboxAdapter.updateGearboxState(gearbox, changeGearOption)
     }
-    def "success HandleGas method by calculateChangeGearForKickDown"() {
+    def "success handleGasAutoMode method by calculateChangeGearForKickDown"() {
         given:
         Threshold threshold = new Threshold(0.5)
         ChangeGearOption changeGearOption = DOUBLE_REDUCE
 
         when:
-        gearboxDriverService.handleGas(SPORT, threshold)
+        gearboxDriverService.handleGasAutoMode(SPORT, threshold)
 
         then:
         1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> true
         1 * calculateGearService.calculateChangeGearForKickDown(threshold, SPORT) >> changeGearOption
         1 * gearboxAdapter.updateGearboxState(gearbox, changeGearOption)
     }
+    def "success handleGasManualMode method by checkIfBrakeByReduceGear"() {
+        given:
+        Double currentRpm = 30001
+        ChangeGearOption changeGearOption = REDUCE
 
+        when:
+        gearboxDriverService.handleGasManualMode(SPORT)
+
+        then:
+        1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> true
+        1 * externalSystemAdapter.getCurrentEngineRpm(externalSystems) >> currentRpm
+        1 * calculateGearService.checkIfBrakeByReduceGear(_ as Rpm, SPORT) >> changeGearOption
+        1 * gearboxAdapter.updateGearboxState(gearbox, changeGearOption)
+    }
     def "success skip nested method when gearbox state is park"() {
         given:
         ChangeGearOption changeGearOption = REDUCE
         Threshold threshold = new Threshold(0.5)
 
         when:
-        gearboxDriverService.handleGas(SPORT, threshold)
+        gearboxDriverService.handleGasAutoMode(SPORT, threshold)
 
         then:
         1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> false

@@ -33,6 +33,11 @@ public enum DriveMode {
     public Threshold getMinDoubleKickDownThreshold() {
       return null;
     }
+
+    @Override
+    public Rpm getReduceGearForBreakingRPM() {
+      return new Rpm(ECO_RPM_TO_REDUCE_GEAR_FOR_BREAKING);
+    }
   },
 
   COMFORT {
@@ -54,6 +59,11 @@ public enum DriveMode {
     @Override
     public Threshold getMinDoubleKickDownThreshold() {
       return null;
+    }
+
+    @Override
+    public Rpm getReduceGearForBreakingRPM() {
+      return new Rpm(COMFORT_RPM_TO_REDUCE_GEAR_FOR_BREAKING);
     }
   },
 
@@ -77,6 +87,11 @@ public enum DriveMode {
     public Threshold getMinDoubleKickDownThreshold() {
       return new Threshold(SPORT_MIN_THRESHOLD_FOR_DOUBLE_KICK_DOWN);
     }
+
+    @Override
+    public Rpm getReduceGearForBreakingRPM() {
+      return new Rpm(SPORT_RPM_TO_REDUCE_GEAR_FOR_BREAKING);
+    }
   };
 
   public abstract Rpm getReduceGearRPM();
@@ -86,4 +101,6 @@ public enum DriveMode {
   public abstract Threshold getMinKickDownThreshold();
 
   public abstract Threshold getMinDoubleKickDownThreshold();
+
+  public abstract Rpm getReduceGearForBreakingRPM();
 }
