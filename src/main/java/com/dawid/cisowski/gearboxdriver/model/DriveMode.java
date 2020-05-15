@@ -15,12 +15,12 @@ public enum DriveMode {
 
   ECO {
     @Override
-    public Rpm getReduceGearRPM() {
+    public Rpm getReduceGearRPM(AggressiveMode aggressiveMode) {
       return new Rpm(ECO_RPM_TO_REDUCE_GEAR);
     }
 
     @Override
-    public Rpm getIncreaseGearRPM() {
+    public Rpm getIncreaseGearRPM(AggressiveMode aggressiveMode) {
       return new Rpm(ECO_RPM_TO_INCREASE_GEAR);
     }
 
@@ -42,13 +42,17 @@ public enum DriveMode {
 
   COMFORT {
     @Override
-    public Rpm getReduceGearRPM() {
-      return new Rpm(COMFORT_RPM_TO_REDUCE_GEAR);
+    public Rpm getReduceGearRPM(AggressiveMode aggressiveMode) {
+      Rpm rpm = new Rpm(COMFORT_RPM_TO_REDUCE_GEAR);
+
+      return aggressiveMode.multiplyRpmByAggressiveMultiplier(rpm);
     }
 
     @Override
-    public Rpm getIncreaseGearRPM() {
-      return new Rpm(COMFORT_RPM_TO_INCREASE_GEAR);
+    public Rpm getIncreaseGearRPM(AggressiveMode aggressiveMode) {
+      Rpm rpm = new Rpm(COMFORT_RPM_TO_INCREASE_GEAR);
+
+      return aggressiveMode.multiplyRpmByAggressiveMultiplier(rpm);
     }
 
     @Override
@@ -69,13 +73,17 @@ public enum DriveMode {
 
   SPORT {
     @Override
-    public Rpm getReduceGearRPM() {
-      return new Rpm(SPORT_RPM_TO_REDUCE_GEAR);
+    public Rpm getReduceGearRPM(AggressiveMode aggressiveMode) {
+      Rpm rpm = new Rpm(SPORT_RPM_TO_REDUCE_GEAR);
+
+      return aggressiveMode.multiplyRpmByAggressiveMultiplier(rpm);
     }
 
     @Override
-    public Rpm getIncreaseGearRPM() {
-      return new Rpm(SPORT_RPM_TO_INCREASE_GEAR);
+    public Rpm getIncreaseGearRPM(AggressiveMode aggressiveMode) {
+      Rpm rpm = new Rpm(SPORT_RPM_TO_INCREASE_GEAR);
+
+      return aggressiveMode.multiplyRpmByAggressiveMultiplier(rpm);
     }
 
     @Override
@@ -94,9 +102,9 @@ public enum DriveMode {
     }
   };
 
-  public abstract Rpm getReduceGearRPM();
+  public abstract Rpm getReduceGearRPM(AggressiveMode aggressiveMode);
 
-  public abstract Rpm getIncreaseGearRPM();
+  public abstract Rpm getIncreaseGearRPM(AggressiveMode aggressiveMode);
 
   public abstract Threshold getMinKickDownThreshold();
 

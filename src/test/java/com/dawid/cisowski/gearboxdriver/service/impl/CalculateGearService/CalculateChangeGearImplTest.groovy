@@ -1,5 +1,6 @@
 package com.dawid.cisowski.gearboxdriver.service.impl.CalculateGearService
 
+import com.dawid.cisowski.gearboxdriver.model.AggressiveMode
 import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption
 import com.dawid.cisowski.gearboxdriver.model.Rpm
 import com.dawid.cisowski.gearboxdriver.service.impl.CalculateGearServiceCalculateChangeGearImpl
@@ -19,12 +20,12 @@ class CalculateChangeGearImplTest extends Specification {
     CalculateGearServiceCalculateChangeGearImpl gearboxDriverService = new CalculateGearServiceCalculateChangeGearImpl()
 
     @Unroll
-    def "Success reduce gear for Rpm: #rpmValue drive mode: #driveMode"() {
+    def "Success reduce gear for Rpm: #rpmValue drive mode: #driveMode and AggressiveMode.ONE"() {
         given:
         Rpm rpm = new Rpm(rpmValue)
 
         when:
-        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode)
+        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode, AggressiveMode.ONE)
 
         then:
         calculatedChangeGearOption == changeGearOption
@@ -37,12 +38,30 @@ class CalculateChangeGearImplTest extends Specification {
     }
 
     @Unroll
-    def "Success increase gear for Rpm: #rpmValue drive mode: #driveMode"() {
+    def "Success reduce gear for Rpm: #rpmValue drive mode: #driveMode and AggressiveMode.TWO"() {
         given:
         Rpm rpm = new Rpm(rpmValue)
 
         when:
-        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode)
+        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode, AggressiveMode.TWO)
+
+        then:
+        calculatedChangeGearOption == changeGearOption
+
+        where:
+        rpmValue | driveMode || changeGearOption
+        999      | ECO       || REDUCE
+        1199     | COMFORT   || REDUCE
+        1949     | SPORT     || REDUCE
+    }
+
+    @Unroll
+    def "Success increase gear for Rpm: #rpmValue drive mode: #driveMode and AggressiveMode.ONE"() {
+        given:
+        Rpm rpm = new Rpm(rpmValue)
+
+        when:
+        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode, AggressiveMode.ONE)
 
         then:
         calculatedChangeGearOption == changeGearOption
@@ -55,12 +74,30 @@ class CalculateChangeGearImplTest extends Specification {
     }
 
     @Unroll
+    def "Success increase gear for Rpm: #rpmValue drive mode: #driveMode and AggressiveMode.TWO"() {
+        given:
+        Rpm rpm = new Rpm(rpmValue)
+
+        when:
+        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode, AggressiveMode.TWO)
+
+        then:
+        calculatedChangeGearOption == changeGearOption
+
+        where:
+        rpmValue | driveMode || changeGearOption
+        2001     | ECO       || INCREASE
+        3001     | COMFORT   || INCREASE
+        6501     | SPORT     || INCREASE
+    }
+
+    @Unroll
     def "Success not change gear for Rpm: #rpmValue drive mode: #driveMode"() {
         given:
         Rpm rpm = new Rpm(rpmValue)
 
         when:
-        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode)
+        ChangeGearOption calculatedChangeGearOption = gearboxDriverService.calculateChangeGear(rpm, driveMode, AggressiveMode.ONE)
 
         then:
         calculatedChangeGearOption == changeGearOption

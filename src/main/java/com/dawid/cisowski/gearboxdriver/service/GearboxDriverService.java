@@ -7,6 +7,7 @@ package com.dawid.cisowski.gearboxdriver.service;
  * on 13.05.20.
  */
 
+import com.dawid.cisowski.gearboxdriver.model.AggressiveMode;
 import com.dawid.cisowski.gearboxdriver.model.DriveMode;
 import com.dawid.cisowski.gearboxdriver.model.Threshold;
 
@@ -20,7 +21,7 @@ public interface GearboxDriverService {
    * @param driveMode current engine Drive Mode
    * @return operation which gearbox should do
    */
-  void handleGasAutoMode(DriveMode driveMode, Threshold threshold);
+  void handleGasAutoMode(DriveMode driveMode, Threshold threshold, AggressiveMode aggressiveMode);
 
   /**
    * Calculate operation which gearbox should do for given parameters in manual mode

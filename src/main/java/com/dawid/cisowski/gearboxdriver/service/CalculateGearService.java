@@ -7,10 +7,7 @@ package com.dawid.cisowski.gearboxdriver.service;
  * on 13.05.20.
  */
 
-import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption;
-import com.dawid.cisowski.gearboxdriver.model.DriveMode;
-import com.dawid.cisowski.gearboxdriver.model.Rpm;
-import com.dawid.cisowski.gearboxdriver.model.Threshold;
+import com.dawid.cisowski.gearboxdriver.model.*;
 
 /**
  * Service to calculate change gear
@@ -22,9 +19,10 @@ public interface CalculateGearService {
    *
    * @param currentRpm current engine RPM
    * @param driveMode  current engine Drive Mode
+   * @param aggressiveMode
    * @return operation which gearbox should do
    */
-  ChangeGearOption calculateChangeGear(Rpm currentRpm, DriveMode driveMode);
+  ChangeGearOption calculateChangeGear(Rpm currentRpm, DriveMode driveMode, AggressiveMode aggressiveMode);
 
   /**
    * Calculate operation which gearbox should do for given parameters in Kickdown mode

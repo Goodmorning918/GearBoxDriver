@@ -29,4 +29,8 @@ public class Rpm {
   public boolean smaller(Rpm reduceGearRPM) {
     return value < reduceGearRPM.getValue();
   }
+
+  public Rpm multiply(double multiplayer) {
+    return new Rpm(value * multiplayer);
+  }
 }

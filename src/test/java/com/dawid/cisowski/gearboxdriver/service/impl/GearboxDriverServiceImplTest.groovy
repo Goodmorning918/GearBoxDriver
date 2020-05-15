@@ -2,6 +2,7 @@ package com.dawid.cisowski.gearboxdriver.service.impl
 
 import com.dawid.cisowski.gearboxdriver.adapter.ExternalSystemAdapter
 import com.dawid.cisowski.gearboxdriver.adapter.GearboxAdapter
+import com.dawid.cisowski.gearboxdriver.model.AggressiveMode
 import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption
 import com.dawid.cisowski.gearboxdriver.model.Rpm
 import com.dawid.cisowski.gearboxdriver.model.Threshold
@@ -44,13 +45,13 @@ class GearboxDriverServiceImplTest extends Specification {
         ChangeGearOption changeGearOption = REDUCE
 
         when:
-        gearboxDriverService.handleGasAutoMode(SPORT, threshold)
+        gearboxDriverService.handleGasAutoMode(SPORT, threshold, AggressiveMode.ONE)
 
         then:
         1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> true
         1 * calculateGearService.calculateChangeGearForKickDown(threshold, SPORT) >> WITHOUT_CHANGE
         1 * externalSystemAdapter.getCurrentEngineRpm(externalSystems) >> currentRpm
-        1 * calculateGearService.calculateChangeGear(_ as Rpm, SPORT) >> changeGearOption
+        1 * calculateGearService.calculateChangeGear(_ as Rpm, SPORT, AggressiveMode.ONE) >> changeGearOption
         1 * gearboxAdapter.updateGearboxState(gearbox, changeGearOption)
     }
     def "success handleGasAutoMode method by calculateChangeGearForKickDown"() {
@@ -59,7 +60,7 @@ class GearboxDriverServiceImplTest extends Specification {
         ChangeGearOption changeGearOption = DOUBLE_REDUCE
 
         when:
-        gearboxDriverService.handleGasAutoMode(SPORT, threshold)
+        gearboxDriverService.handleGasAutoMode(SPORT, threshold, AggressiveMode.ONE)
 
         then:
         1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> true
@@ -86,7 +87,7 @@ class GearboxDriverServiceImplTest extends Specification {
         Threshold threshold = new Threshold(0.5)
 
         when:
-        gearboxDriverService.handleGasAutoMode(SPORT, threshold)
+        gearboxDriverService.handleGasAutoMode(SPORT, threshold, AggressiveMode.ONE)
 
         then:
         1 * gearboxAdapter.isGearboxInDriveState(gearbox) >> false

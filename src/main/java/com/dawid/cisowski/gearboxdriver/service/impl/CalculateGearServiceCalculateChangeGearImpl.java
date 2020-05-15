@@ -1,9 +1,6 @@
 package com.dawid.cisowski.gearboxdriver.service.impl;
 
-import com.dawid.cisowski.gearboxdriver.model.ChangeGearOption;
-import com.dawid.cisowski.gearboxdriver.model.DriveMode;
-import com.dawid.cisowski.gearboxdriver.model.Rpm;
-import com.dawid.cisowski.gearboxdriver.model.Threshold;
+import com.dawid.cisowski.gearboxdriver.model.*;
 import com.dawid.cisowski.gearboxdriver.service.CalculateGearService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,13 +18,13 @@ public class CalculateGearServiceCalculateChangeGearImpl implements CalculateGea
    * {@inheritDoc}
    */
   @Override
-  public ChangeGearOption calculateChangeGear(Rpm currentRpm, DriveMode driveMode) {
+  public ChangeGearOption calculateChangeGear(Rpm currentRpm, DriveMode driveMode, AggressiveMode aggressiveMode) {
     log.info("Calculate change gear operation for rpm: {}, and driveMode: {}", currentRpm.getValue(), driveMode.name());
 
-    if (currentRpm.grater(driveMode.getIncreaseGearRPM())) {
+    if (currentRpm.grater(driveMode.getIncreaseGearRPM(aggressiveMode))) {
       log.info("Gearbox should increase gear");
       return INCREASE;
-    } else if (currentRpm.smaller(driveMode.getReduceGearRPM())) {
+    } else if (currentRpm.smaller(driveMode.getReduceGearRPM(aggressiveMode))) {
       log.info("Gearbox should reduce gear");
       return REDUCE;
     } else {
